@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.ItemCheckBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.ItemCheckBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="itemId" property="itemid" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="DATE" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from item_check_db
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.ItemCheckBean" >
+    insert into item_check_db (itemId, time
+      )
+    values ( #{itemid,jdbcType=INTEGER}, #{time,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.ItemCheckBean" >
+    update item_check_db
+    set itemId = #{itemid,jdbcType=INTEGER},
+      time = #{time,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, itemId, time
+    from item_check_db
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, itemId, time
+    from item_check_db
+  </select>
+
+  <select id="selectItem" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    item_check_db
+    WHERE
+   itemid=#{itemId,jdbcType=INTEGER}
+    AND time = date_sub(
+    curdate(),
+    INTERVAL   #{day,jdbcType=INTEGER}  day)
+  </select>
+
+
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+    <properties resource="application.properties"/>
+
+    <!-- 数据库驱动包位置 -->
+    <classPathEntry
+            location="E:\mysql-connector-java-5.1.44.jar" />
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <!-- TKmybatis配置 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+        </plugin>-->
+        <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">-->
+            <!--<property name="mappers" value="operation.util.MyMapper"/>-->
+        <!--</plugin>-->
+
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!-- 数据库链接URL、用户名、密码 -->
+        <jdbcConnection driverClass="${spring.datasource.driverClassName}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+        </jdbcConnection>
+        <!-- 生成模型的包名和位置 -->
+        <!--<javaModelGenerator targetPackage="${targetEntityPackage}" targetProject="${targetJavaProject}" />-->
+        <javaModelGenerator targetPackage="com.yiche.bean" targetProject="src/main/java"/>
+        <!-- 生成的映射文件包名和位置 -->
+        <!--<sqlMapGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" />-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+        <!-- 生成service的包名和位置 -->
+        <!--<javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />-->
+        <javaClientGenerator targetPackage="com.yiche.dao" targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+
+        <!-- 要生成的那些表 -->
+        <!--<table tableName="column_rule_db" domainObjectName="ColumnRuleBean">-->
+        <!--</table>-->
+        <!--<table tableName="table_rule_db" domainObjectName="TableRuleBean">-->
+        <!--</table>-->
+        <!--<table tableName="day_date_db" domainObjectName="DayDataBean">-->
+        <!--</table>-->
+        <!--<table tableName="rule_running_log_db" domainObjectName="RuleRunningLogBean">-->
+        <!--</table>-->
+        <!--<table tableName="rule_check_db" domainObjectName="RuleCheckBean">-->
+        <!--</table>-->
+        <!--<table tableName="table_rule_db" domainObjectName="TableRuleBean">-->
+        <!--</table>-->
+        <!--<table tableName="item_check_db" domainObjectName="itemCheckBean">-->
+        <!--</table>-->
+        <!--<table tableName="item_module_list" domainObjectName="ItemModuleListBean">-->
+        <!--</table>-->
+        <table tableName="rule_not_ready_db" domainObjectName="RuleNotReadyBean">
+        </table>
+    </context>
+</generatorConfiguration>

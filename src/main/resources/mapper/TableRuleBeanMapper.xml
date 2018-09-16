@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.TableRuleBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.TableRuleBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tid" property="tid" jdbcType="VARCHAR" />
+    <result column="monitor_type" property="monitorType" jdbcType="VARCHAR" />
+    <result column="tcondition" property="tcondition" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="database_name" property="databaseName" jdbcType="VARCHAR" />
+    <result column="h_compare" property="hCompare" jdbcType="VARCHAR" />
+    <result column="t_compare" property="tCompare" jdbcType="VARCHAR" />
+    <result column="self" property="self" jdbcType="VARCHAR" />
+    <result column="seven_wave_avg" property="sevenWaveAvg" jdbcType="VARCHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="towner" property="towner" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="reciever" property="reciever" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="monitor_time" property="monitorTime" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="check_day" property="checkDay" jdbcType="INTEGER" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="content_sql" property="contentSql" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="partition_type" property="partitionType" jdbcType="VARCHAR" />
+    <result column="next_exec_time" property="nextExecTime" jdbcType="DATE"/>
+    <result column="alarm_uniqueid" property="alarmUniqueId" jdbcType="VARCHAR"/>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from table_rule_db
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.TableRuleBean" >
+    insert into table_rule_db (id, tid, monitor_type, 
+      tcondition, table_name, database_name, 
+      h_compare, t_compare, self, 
+      seven_wave_avg, alarm_type, remark, 
+      towner, content, reciever, 
+      create_time, monitor_time, username, 
+      status, check_day, column_name, 
+      content_sql, number, partition_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{tid,jdbcType=VARCHAR}, #{monitorType,jdbcType=VARCHAR}, 
+      #{tcondition,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, #{databaseName,jdbcType=VARCHAR}, 
+      #{hCompare,jdbcType=VARCHAR}, #{tCompare,jdbcType=VARCHAR}, #{self,jdbcType=VARCHAR}, 
+      #{sevenWaveAvg,jdbcType=VARCHAR}, #{alarmType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{towner,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{reciever,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{monitorTime,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{checkDay,jdbcType=INTEGER}, #{columnName,jdbcType=VARCHAR}, 
+      #{contentSql,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{partitionType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.TableRuleBean" >
+    update table_rule_db
+    set tid = #{tid,jdbcType=VARCHAR},
+      monitor_type = #{monitorType,jdbcType=VARCHAR},
+      tcondition = #{tcondition,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      database_name = #{databaseName,jdbcType=VARCHAR},
+      h_compare = #{hCompare,jdbcType=VARCHAR},
+      t_compare = #{tCompare,jdbcType=VARCHAR},
+      self = #{self,jdbcType=VARCHAR},
+      seven_wave_avg = #{sevenWaveAvg,jdbcType=VARCHAR},
+      alarm_type = #{alarmType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      towner = #{towner,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      reciever = #{reciever,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      monitor_time = #{monitorTime,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      check_day = #{checkDay,jdbcType=INTEGER},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      content_sql = #{contentSql,jdbcType=VARCHAR},
+      number = #{number,jdbcType=VARCHAR},
+      partition_type = #{partitionType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, tid, monitor_type, tcondition, table_name, database_name, h_compare, t_compare, 
+    self, seven_wave_avg, alarm_type, remark, towner, content, reciever, create_time, 
+    monitor_time, username, status, check_day, column_name, content_sql, number, partition_type,alarm_uniqueid
+    from table_rule_db
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryNeedRunList" resultMap="BaseResultMap" >
+    select id, tid, monitor_type, tcondition, table_name, database_name, h_compare, t_compare, 
+    self, seven_wave_avg, alarm_type, remark, towner, content, reciever, create_time, 
+    monitor_time, username, status, check_day, column_name, content_sql, number, partition_type, next_exec_time,alarm_uniqueid
+    from table_rule_db where status=0 and <![CDATA[ next_exec_time <= #{nowTime} ]]>
+  </select>
+
+
+
+
+
+  <select id="getReadyItemAll" resultMap="BaseResultMap" >
+    select * from table_rule_db c INNER JOIN
+    (SELECT
+    DISTINCT tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid =  #{parentId,jdbcType=VARCHAR}
+    OR a.id =  #{id,jdbcType=VARCHAR}) d
+    on  c.tid=d.tableid
+    where c.monitor_type='完成时间'
+    <if test="partitionType != null and partitionType != ''">
+      and c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="getReadyItemAllDnf" resultMap="BaseResultMap" >
+    select * from table_rule_db c INNER JOIN
+    (SELECT
+    DISTINCT tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}) d
+    on  c.tid=d.tableid
+    where c.monitor_type='完成时间'
+    and  tid not in (
+    SELECT
+    c.rule_id
+    FROM
+    rule_running_log_db c
+    INNER JOIN (
+    SELECT
+    DISTINCT b.tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}
+    ) d ON c.rule_id = d.tableid
+    AND date(create_time) = date_sub(curdate(), INTERVAL #{day,jdbcType=INTEGER} DAY)
+    where  c.type='完成时间'
+    )
+    <if test="partitionType != null and partitionType != ''">
+      and c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="getItemAllDnr" resultMap="BaseResultMap" >
+    select * from table_rule_db c INNER JOIN
+    (SELECT
+    DISTINCT tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid =  #{parentId,jdbcType=VARCHAR}
+    OR a.id =  #{id,jdbcType=VARCHAR}) d
+    on  c.tid=d.tableid
+    where c.monitor_type!='完成时间'
+    <if test="partitionType != null and partitionType != ''">
+      and c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="getItemAllDnrDnf" resultMap="BaseResultMap" >
+    select * from table_rule_db c INNER JOIN
+    (SELECT
+    DISTINCT tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}) d
+    on  c.tid=d.tableid
+    where c.monitor_type!='完成时间'
+    and  tid not in (
+    SELECT
+    c.rule_id
+    FROM
+    rule_running_log_db c
+    INNER JOIN (
+    SELECT
+    DISTINCT b.tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}
+    ) d ON c.rule_id = d.tableid
+    AND date(create_time) = date_sub(curdate(), INTERVAL #{day,jdbcType=INTEGER} DAY)
+    where  c.type!='完成时间'
+    )
+    <if test="partitionType != null and partitionType != ''">
+      and c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="getTimeRuleNoPass" resultMap="BaseResultMap" >
+    select * from  table_rule_db  b
+    INNER JOIN  rule_running_log_db a
+    on a.rule_id=b.tid
+    where a.value='未就绪' and
+    date(a.create_time) = date_sub(curdate(), INTERVAL 0 DAY)
+  </select>
+
+  <select id="getTableRuleByName" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    table_rule_db
+    WHERE
+    database_name = #{dateBaese,jdbcType=VARCHAR}
+    AND table_name = #{tableName,jdbcType=VARCHAR}
+    AND monitor_type = #{monitorType,jdbcType=VARCHAR}
+    AND self=#{self,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateExecTime">
+    UPDATE table_rule_db set next_exec_time = #{nextExecTime} WHERE id = #{id}
+  </update>
+
+  <select id="queryAll" resultMap="BaseResultMap">
+    SELECT * FROM table_rule_db
+  </select>
+
+</mapper>

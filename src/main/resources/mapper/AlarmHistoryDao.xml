@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yiche.dao.AlarmHistoryDao">
+
+    <resultMap type="com.yiche.bean.AlarmHistoryEntity" id="AlarmHistoryMap">
+        <result property="alarmHistoryId" column="alarm_history_id"/>
+        <result property="databaseName" column="database_name"/>
+        <result property="tableName" column="table_name"/>
+        <result property="ruleId" column="rule_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+    <insert id="save" parameterType="com.yiche.bean.AlarmHistoryEntity" useGeneratedKeys="true" keyProperty="alarmHistoryId">
+        insert into alarm_history
+        (
+        `database_name`,
+        `table_name`,
+        `rule_id`
+        )
+        values
+        (
+        #{databaseName},
+        #{tableName},
+        #{ruleId}
+        )
+    </insert>
+
+
+</mapper>

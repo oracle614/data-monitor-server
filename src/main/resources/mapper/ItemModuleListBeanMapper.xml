@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.ItemModuleListBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.ItemModuleListBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parentid" property="parentid" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from item_module_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.ItemModuleListBean" >
+    insert into item_module_list (id, name, parentid
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.ItemModuleListBean" >
+    update item_module_list
+    set name = #{name,jdbcType=VARCHAR},
+      parentid = #{parentid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, name, parentid
+    from item_module_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, name, parentid
+    from item_module_list
+  </select>
+
+
+  <select id="selectProByColumnId" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    item_module_list a
+    INNER  JOIN item_column_relation b ON
+    a.id=b.itemid
+    where columnid=#{columnId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectModuleByColumnId" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    item_module_list a
+    INNER  JOIN item_column_relation b ON
+    a.id=b.itemid
+    where columnid=#{columnId,jdbcType=VARCHAR}  and parentid!=0
+  </select>
+
+
+  <select id="selectProByTableId" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    item_module_list a
+    INNER  JOIN item_table_relation b ON
+    a.id=b.itemid
+    where tableid=#{tableId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectModuleByTableId" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    item_module_list a
+    INNER  JOIN item_table_relation b ON
+    a.id=b.itemid
+    where tableid=#{tableId,jdbcType=VARCHAR} and parentid!=0
+  </select>
+</mapper>

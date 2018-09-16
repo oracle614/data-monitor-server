@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.DayDataBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.DayDataBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="database_name" property="databaseName" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="all_count" property="allCount" jdbcType="INTEGER" />
+    <result column="all_repeat" property="allRepeat" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="null_num" property="nullNum" jdbcType="INTEGER" />
+    <result column="max_lenth_num" property="maxLenthNum" jdbcType="INTEGER" />
+    <result column="min_lenth_num" property="minLenthNum" jdbcType="INTEGER" />
+    <result column="avg_lenth_num" property="avgLenthNum" jdbcType="INTEGER" />
+    <result column="zero_num" property="zeroNum" jdbcType="INTEGER" />
+    <result column="special_num" property="specialNum" jdbcType="INTEGER" />
+    <result column="sum" property="sum" jdbcType="DOUBLE" />
+    <result column="xxhg" property="xxhg" jdbcType="DOUBLE" />
+    <result column="ydpj" property="ydpj" jdbcType="DOUBLE" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from day_date_db
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.DayDataBean" >
+    insert into day_date_db (id, database_name, table_name, 
+      all_count, all_repeat, create_time, 
+      column_name, null_num, max_lenth_num, 
+      min_lenth_num, avg_lenth_num, zero_num, 
+      special_num, sum, xxhg, 
+      ydpj)
+    values (#{id,jdbcType=INTEGER}, #{databaseName,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, 
+      #{allCount,jdbcType=INTEGER}, #{allRepeat,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}, 
+      #{columnName,jdbcType=VARCHAR}, #{nullNum,jdbcType=INTEGER}, #{maxLenthNum,jdbcType=INTEGER}, 
+      #{minLenthNum,jdbcType=INTEGER}, #{avgLenthNum,jdbcType=INTEGER}, #{zeroNum,jdbcType=INTEGER}, 
+      #{specialNum,jdbcType=INTEGER}, #{sum,jdbcType=DOUBLE}, #{xxhg,jdbcType=DOUBLE}, 
+      #{ydpj,jdbcType=DOUBLE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.DayDataBean" >
+    update day_date_db
+    set database_name = #{databaseName,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      all_count = #{allCount,jdbcType=INTEGER},
+      all_repeat = #{allRepeat,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=DATE},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      null_num = #{nullNum,jdbcType=INTEGER},
+      max_lenth_num = #{maxLenthNum,jdbcType=INTEGER},
+      min_lenth_num = #{minLenthNum,jdbcType=INTEGER},
+      avg_lenth_num = #{avgLenthNum,jdbcType=INTEGER},
+      zero_num = #{zeroNum,jdbcType=INTEGER},
+      special_num = #{specialNum,jdbcType=INTEGER},
+      sum = #{sum,jdbcType=DOUBLE},
+      xxhg = #{xxhg,jdbcType=DOUBLE},
+      ydpj = #{ydpj,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, database_name, table_name, all_count, all_repeat, create_time, column_name, 
+    null_num, max_lenth_num, min_lenth_num, avg_lenth_num, zero_num, special_num, sum, 
+    xxhg, ydpj
+    from day_date_db
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, database_name, table_name, all_count, all_repeat, create_time, column_name, 
+    null_num, max_lenth_num, min_lenth_num, avg_lenth_num, zero_num, special_num, sum, 
+    xxhg, ydpj
+    from day_date_db
+  </select>
+
+    <!--!!!!!!!!!!!!!!!!!!!!!-->
+
+
+  <select id="selectByTable" resultMap="BaseResultMap" >
+    select  *
+    from day_date_db
+    where
+    database_name=#{databaseName,jdbcType=VARCHAR}
+    AND
+    table_name=#{tableName,jdbcType=VARCHAR}
+    order by create_time DESC
+    limit 7
+  </select>
+
+
+  <select id="selectByTableInDay" resultMap="BaseResultMap" >
+    select *
+    from day_date_db
+    where
+    database_name=#{databaseName,jdbcType=VARCHAR}
+    AND
+    table_name=#{tableName,jdbcType=VARCHAR}
+    <if test="columnName != null " >
+      AND
+      column_name=#{columnName,jdbcType=VARCHAR}
+    </if>
+    AND
+    DATE_SUB(CURDATE(), INTERVAL  #{day,jdbcType=INTEGER}  DAY)  &lt;= date(create_time)
+  </select>
+
+
+  <select id="selectDayDataToday" resultMap="BaseResultMap" >
+    select *
+    from day_date_db
+    where
+    database_name=#{databaseName,jdbcType=VARCHAR}
+    AND
+    table_name=#{tableName,jdbcType=VARCHAR}
+    <if test="columnName != null " >
+      AND
+      column_name=#{columnName,jdbcType=VARCHAR}
+    </if>
+    AND
+    create_time =date_sub(curdate(),INTERVAL  #{checkDay,jdbcType=INTEGER} day)
+    FOR UPDATE;
+  </select>
+
+
+  <select id="getDataByDataBaseAndTable" resultMap="BaseResultMap" >
+    select *
+    from day_date_db
+    database_name=#{databaseName,jdbcType=VARCHAR}
+    AND
+    table_name=#{tableName,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

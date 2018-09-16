@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.ColumnRuleBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.ColumnRuleBean" >
+    <id column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="monitor_type" property="monitorType" jdbcType="VARCHAR" />
+    <result column="ccondition" property="ccondition" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="database_name" property="databaseName" jdbcType="VARCHAR" />
+    <result column="calculate_type" property="calculateType" jdbcType="VARCHAR" />
+    <result column="deviation" property="deviation" jdbcType="VARCHAR" />
+    <result column="h_compare" property="hCompare" jdbcType="VARCHAR" />
+    <result column="t_compare" property="tCompare" jdbcType="VARCHAR" />
+    <result column="self" property="self" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="cowner" property="cowner" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="reciever" property="reciever" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="count_type" property="countType" jdbcType="VARCHAR" />
+    <result column="aggregate_function" property="aggregateFunction" jdbcType="VARCHAR" />
+    <result column="day_increment" property="dayIncrement" jdbcType="VARCHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="check_day" property="checkDay" jdbcType="INTEGER" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="partition_type" property="partitionType" jdbcType="VARCHAR" />
+    <result column="next_exec_time" property="nextExecTime" jdbcType="DATE"/>
+    <result column="alarm_uniqueid" property="alarmUniqueId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from column_rule_db
+    where cid = #{cid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.ColumnRuleBean" >
+    insert into column_rule_db (cid, id, monitor_type, 
+      ccondition, table_name, column_name, 
+      database_name, calculate_type, deviation, 
+      h_compare, t_compare, self, 
+      remark, cowner, content, 
+      reciever, create_time, count_type, 
+      aggregate_function, day_increment, alarm_type, 
+      username, status, check_day, 
+      number, partition_type)
+    values (#{cid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{monitorType,jdbcType=VARCHAR}, 
+      #{ccondition,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{databaseName,jdbcType=VARCHAR}, #{calculateType,jdbcType=VARCHAR}, #{deviation,jdbcType=VARCHAR}, 
+      #{hCompare,jdbcType=VARCHAR}, #{tCompare,jdbcType=VARCHAR}, #{self,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{cowner,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{reciever,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{countType,jdbcType=VARCHAR}, 
+      #{aggregateFunction,jdbcType=VARCHAR}, #{dayIncrement,jdbcType=VARCHAR}, #{alarmType,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{checkDay,jdbcType=INTEGER}, 
+      #{number,jdbcType=VARCHAR}, #{partitionType,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.ColumnRuleBean" >
+    update column_rule_db
+    set id = #{id,jdbcType=VARCHAR},
+      monitor_type = #{monitorType,jdbcType=VARCHAR},
+      ccondition = #{ccondition,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      database_name = #{databaseName,jdbcType=VARCHAR},
+      calculate_type = #{calculateType,jdbcType=VARCHAR},
+      deviation = #{deviation,jdbcType=VARCHAR},
+      h_compare = #{hCompare,jdbcType=VARCHAR},
+      t_compare = #{tCompare,jdbcType=VARCHAR},
+      self = #{self,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      cowner = #{cowner,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      reciever = #{reciever,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      count_type = #{countType,jdbcType=VARCHAR},
+      aggregate_function = #{aggregateFunction,jdbcType=VARCHAR},
+      day_increment = #{dayIncrement,jdbcType=VARCHAR},
+      alarm_type = #{alarmType,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      check_day = #{checkDay,jdbcType=INTEGER},
+      number = #{number,jdbcType=VARCHAR},
+      partition_type = #{partitionType,jdbcType=VARCHAR}
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select cid, id, monitor_type, ccondition, table_name, column_name, database_name, 
+    calculate_type, deviation, h_compare, t_compare, self, remark, cowner, content, reciever, 
+    create_time, count_type, aggregate_function, day_increment, alarm_type, username, 
+    status, check_day, number, partition_type,alarm_uniqueid
+    from column_rule_db
+    where cid = #{cid,jdbcType=INTEGER}
+  </select>
+  <select id="queryNeedRunList" resultMap="BaseResultMap" >
+    select cid, id, monitor_type, ccondition, table_name, column_name, database_name, 
+    calculate_type, deviation, h_compare, t_compare, self, remark, cowner, content, reciever, 
+    create_time, count_type, aggregate_function, day_increment, alarm_type, username, 
+    status, check_day, number, partition_type,next_exec_time,alarm_uniqueid
+    from column_rule_db where status = 0 AND  <![CDATA[ next_exec_time <= #{nowTime} ]]>
+  </select>
+
+  <select id="getColumnItemAll" resultMap="BaseResultMap" >
+    SELECT * from column_rule_db c INNER JOIN
+    (SELECT
+    DISTINCT columnid
+    FROM
+    item_module_list a
+    INNER JOIN item_column_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}
+    ) d on  c.id=d.columnid
+    <if test="partitionType != null and partitionType != ''">
+      where c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="getColumnItemDnf" resultMap="BaseResultMap" >
+    SELECT * from column_rule_db c INNER JOIN
+    (SELECT
+    DISTINCT columnid
+    FROM
+    item_module_list a
+    INNER JOIN item_column_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}
+    ) d on  c.id=d.columnid
+    where c.id not in    (
+    SELECT
+    c.rule_id
+    FROM
+    rule_running_log_db c
+    INNER JOIN (
+    SELECT
+    DISTINCT b.columnid
+    FROM
+    item_module_list a
+    INNER JOIN item_column_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid = #{parentId,jdbcType=VARCHAR}
+    OR a.id = #{id,jdbcType=VARCHAR}
+    ) d ON c.rule_id = d.columnid
+    AND date(create_time) = date_sub(curdate(), INTERVAL #{day,jdbcType=INTEGER} DAY))
+    <if test="partitionType != null and partitionType != ''">
+    and c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <update id="updateExecTime">
+    UPDATE column_rule_db set next_exec_time = #{nextExecTime} WHERE cid = #{cid}
+  </update>
+
+  <select id="queryAll" resultMap="BaseResultMap">
+    SELECT * FROM column_rule_db
+  </select>
+
+
+</mapper>
