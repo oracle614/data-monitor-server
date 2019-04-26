@@ -2,7 +2,6 @@ package com.yiche.service;
 
 import com.yiche.bean.ColumnRuleBean;
 
-import java.util.List;
 import java.util.Vector;
 
 public interface ColumnRuleService {

@@ -60,7 +60,11 @@
         <!--</table>-->
         <!--<table tableName="item_module_list" domainObjectName="ItemModuleListBean">-->
         <!--</table>-->
-        <table tableName="rule_not_ready_db" domainObjectName="RuleNotReadyBean">
+        <!--<table tableName="rule_not_ready_db" domainObjectName="RuleNotReadyBean">-->
+        <!--</table>-->
+        <!--<table tableName="dimension_column_tb" domainObjectName="DimensionColumnBean">-->
+        <!--</table>-->
+        <table tableName="dimension_result_tb" domainObjectName="DimensionResultBean">
         </table>
     </context>
 </generatorConfiguration>

@@ -1,5 +1,7 @@
 package com.yiche.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class TableRuleBean {
@@ -33,6 +35,7 @@ public class TableRuleBean {
 
     private String reciever;
 
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private String monitorTime;
@@ -54,6 +57,20 @@ public class TableRuleBean {
     private Date nextExecTime;
 
     private String alarmUniqueId;
+
+    private String priority;
+
+    private String dimension;
+
+    private String exeTime;
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 
     public Integer getId() {
         return id;
@@ -261,5 +278,21 @@ public class TableRuleBean {
 
     public String getAlarmUniqueId() {
         return alarmUniqueId;
+    }
+
+    public String getExeTime() {
+        return exeTime;
+    }
+
+    public void setExeTime(String exeTime) {
+        this.exeTime = exeTime;
+    }
+
+    public String getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(String dimension) {
+        this.dimension = dimension;
     }
 }

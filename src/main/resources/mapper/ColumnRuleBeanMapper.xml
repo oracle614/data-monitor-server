@@ -30,6 +30,8 @@
     <result column="partition_type" property="partitionType" jdbcType="VARCHAR" />
     <result column="next_exec_time" property="nextExecTime" jdbcType="DATE"/>
     <result column="alarm_uniqueid" property="alarmUniqueId" jdbcType="VARCHAR" />
+    <result column="priority" property="priority" jdbcType="VARCHAR" />
+    <result column="exe_time" property="exeTime" jdbcType="VARCHAR" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from column_rule_db
@@ -96,7 +98,7 @@
     select cid, id, monitor_type, ccondition, table_name, column_name, database_name, 
     calculate_type, deviation, h_compare, t_compare, self, remark, cowner, content, reciever, 
     create_time, count_type, aggregate_function, day_increment, alarm_type, username, 
-    status, check_day, number, partition_type,next_exec_time,alarm_uniqueid
+    status, check_day, number, partition_type,next_exec_time,alarm_uniqueid,priority,exe_time
     from column_rule_db where status = 0 AND  <![CDATA[ next_exec_time <= #{nowTime} ]]>
   </select>
 
@@ -110,7 +112,7 @@
     WHERE
     a.parentid = #{parentId,jdbcType=VARCHAR}
     OR a.id = #{id,jdbcType=VARCHAR}
-    ) d on  c.id=d.columnid
+    ) d on  c.id=d.columnid  and c.status = 0
     <if test="partitionType != null and partitionType != ''">
       where c.partition_type= #{partitionType,jdbcType=VARCHAR}
     </if>
@@ -143,7 +145,7 @@
     a.parentid = #{parentId,jdbcType=VARCHAR}
     OR a.id = #{id,jdbcType=VARCHAR}
     ) d ON c.rule_id = d.columnid
-    AND date(create_time) = date_sub(curdate(), INTERVAL #{day,jdbcType=INTEGER} DAY))
+    AND date(create_time) = date_sub(curdate(), INTERVAL #{day,jdbcType=INTEGER} DAY))  and c.status = 0
     <if test="partitionType != null and partitionType != ''">
     and c.partition_type= #{partitionType,jdbcType=VARCHAR}
     </if>
@@ -157,5 +159,9 @@
     SELECT * FROM column_rule_db
   </select>
 
+  <select id="getColumnRuleById" resultType="string">
+    SELECT number FROM column_rule_db
+    where id = #{id}
+   </select>
 
 </mapper>

@@ -1,8 +1,6 @@
 package com.yiche.service;
 
 import com.yiche.bean.RuleRunningLogBean;
-import com.yiche.bean.TableRuleBean;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,11 +17,12 @@ public interface ExcutingRuleService {
 
     Integer getResultLogCount(String dataBaseName, String tableName);
 
-    void warnning(String alarmUniqueId, String dateBase, String tableName, String content, String column, String error, String value
-            , String valueCompare, String scope, String id, String project, String waveScope, Integer checkDay, String partitionType);
+    Integer getResultLogStatusCount(String dataBaseName, String tableName, String status);
 
+    void warning(String alarmUniqueId, String dateBase, String tableName, String content, String column, String error, String value
+            , String valueCompare, String scope, String id, String project, String waveScope, Integer checkDay, String partitionType, String user, String priority);
 
-    boolean isPartitionReady(String partitions, Integer day, String partitionType);
+    boolean isPartitionReady(String expectedPartition);
 
     void warningWhenExecRuleException(String subject, String body);
 
@@ -31,13 +30,17 @@ public interface ExcutingRuleService {
 
     void getTimeRuleNoPass();
 
-   // void sqlWarnning(String alarmUniqueId, String dateBase, String tableName, String content);
+    void runDataWarehourse(String partitionType);
 
-    void runDataWarehourse(String partitionType, Integer id, String name);
+    void runPro(String partitionType);
 
-    void runPro(String partitionType, Integer id, String proName);
+    void runDistributorPro(String partitionType);
 
-    void runDistributorPro(String partitionType, Integer id, String proName);
+    void sendTodayNoPassReport();
 
+    void globalReport(String partitionType);
 
+    void yipai(String partitionType);
+
+    void dimensionWarning(String alarmUniqueId, String dateBase, String tableName, String content, String column, String error, String id, String project, Integer checkDay, String partitionType, String user, String priority, String errorMsg);
 }

@@ -14,6 +14,8 @@ public class WarnResultBean {
 
    private String project;
 
+   private String wave;
+
     public String getValue() {
         return value;
     }
@@ -60,5 +62,13 @@ public class WarnResultBean {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public String getWave() {
+        return wave;
+    }
+
+    public void setWave(String wave) {
+        this.wave = wave;
     }
 }

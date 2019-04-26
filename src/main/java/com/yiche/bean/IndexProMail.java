@@ -2,10 +2,11 @@ package com.yiche.bean;
 
 public class IndexProMail {
 
-    private  String project;
+    private String project;
     private String passDevition;
     private String readyRule;
     private String dnrRule;
+    private String noReadyDetail;
     private String noPassDetail;
     private String dataDnfDetail;
 
@@ -55,5 +56,13 @@ public class IndexProMail {
 
     public void setDataDnfDetail(String dataDnfDetail) {
         this.dataDnfDetail = dataDnfDetail;
+    }
+
+    public String getNoReadyDetail() {
+        return noReadyDetail;
+    }
+
+    public void setNoReadyDetail(String noReadyDetail) {
+        this.noReadyDetail = noReadyDetail;
     }
 }

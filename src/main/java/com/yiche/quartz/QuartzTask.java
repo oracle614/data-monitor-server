@@ -14,7 +14,7 @@ import java.util.Date;
 
 @Component
 public class QuartzTask {
-     private final Logger logger = LoggerFactory.getLogger(QuartzTask.class);
+    private final Logger logger = LoggerFactory.getLogger(QuartzTask.class);
     @Autowired
     ExcutingRuleService excutingRuleService;
 
@@ -77,10 +77,10 @@ public class QuartzTask {
     public void dataWarehourseRule() throws Exception {
         if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行数仓项目调度任务-日：{}", new Date());
-            excutingRuleService.runDataWarehourse(FinalVar.DAY, 40, FinalVar.DATAWAREHOURSE);
+            excutingRuleService.runDataWarehourse(FinalVar.DAY);
         } else {
             logger.info("执行数仓项目调度任务-日和月：{}", new Date());
-            excutingRuleService.runDataWarehourse(null, 40, FinalVar.DATAWAREHOURSE);
+            excutingRuleService.runDataWarehourse(null);
         }
     }
 
@@ -88,10 +88,10 @@ public class QuartzTask {
     public void dataWarehourseRule2() throws Exception {
         if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行数仓项目调度任务--日：{}", new Date());
-            excutingRuleService.runDataWarehourse(FinalVar.DAY, 40, FinalVar.DATAWAREHOURSE);
+            excutingRuleService.runDataWarehourse(FinalVar.DAY);
         } else {
             logger.info("执行数仓项目调度任务--日和月：{}", new Date());
-            excutingRuleService.runDataWarehourse(null, 40, FinalVar.DATAWAREHOURSE);
+            excutingRuleService.runDataWarehourse(null);
         }
     }
 
@@ -105,10 +105,10 @@ public class QuartzTask {
     public void platformIndex() throws Exception {
         if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行渠道线索调度任务--日：{}", new Date());
-            excutingRuleService.runPro(FinalVar.DAY, 42, FinalVar.PLATFORMINDEX);
+            excutingRuleService.runPro(FinalVar.DAY);
         } else {
             logger.info("执行渠道线索调度任务--日和月：{}", new Date());
-            excutingRuleService.runPro(null, 42, FinalVar.PLATFORMINDEX);
+            excutingRuleService.runPro(null);
         }
     }
 
@@ -116,10 +116,10 @@ public class QuartzTask {
     public void platformIndex2() throws Exception {
         if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行渠道线索调度任务--日：{}", new Date());
-            excutingRuleService.runPro(FinalVar.DAY, 42, FinalVar.PLATFORMINDEX);
+            excutingRuleService.runPro(FinalVar.DAY);
         } else {
             logger.info("执行渠道线索调度任务--日和月：{}", new Date());
-            excutingRuleService.runPro(null, 42, FinalVar.PLATFORMINDEX);
+            excutingRuleService.runPro(null);
         }
     }
 
@@ -132,24 +132,66 @@ public class QuartzTask {
     public void distributorDataCenter() throws Exception {
         if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行经销商数据中心调度任务--日：{}", new Date());
-            excutingRuleService.runDistributorPro(FinalVar.DAY, 41, FinalVar.DISTRIBUTORDATACENTER);
+            excutingRuleService.runDistributorPro(FinalVar.DAY);
         } else {
             logger.info("执行经销商数据中心调度任务--日和月：{}", new Date());
-            excutingRuleService.runDistributorPro(null, 41, FinalVar.DISTRIBUTORDATACENTER);
+            excutingRuleService.runDistributorPro(null);
         }
     }
 
     @Scheduled(cron = "0 0 9 * * ?") // 9点发送报告
     public void distributorDataCenter2() throws Exception {
-      if (!DateFormatSafe.isFirstDay()) {
+        if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行经销商数据中心调度任务--日：{}", new Date());
-            excutingRuleService.runDistributorPro(FinalVar.DAY, 41, FinalVar.DISTRIBUTORDATACENTER);
+            excutingRuleService.runDistributorPro(FinalVar.DAY);
         } else {
             logger.info("执行经销商数据中心调度任务--日和月：{}", new Date());
-            excutingRuleService.runDistributorPro(null, 41, FinalVar.DISTRIBUTORDATACENTER);
+            excutingRuleService.runDistributorPro(null);
         }
     }
 
+    /**
+     * 全局报表
+     *
+     * @throws Exception
+     */
+    @Scheduled(cron = "0 0 9 * * ?") // 9点发送报告
+    public void globalReport() throws Exception {
+        if (!DateFormatSafe.isFirstDay()) {
+            logger.info("执行全局报表调度任务--日：{}", new Date());
+            excutingRuleService.globalReport(FinalVar.DAY);
+        } else {
+            logger.info("执行全局报表调度任务--日和月：{}", new Date());
+            excutingRuleService.globalReport(null);
+        }
+    }
+
+    /**
+     * 易湃线索宽表
+     *
+     * @throws Exception
+     */
+    @Scheduled(cron = "0 0 7 * * ?") // 7点发送报告
+    public void yipai() throws Exception {
+        if (!DateFormatSafe.isFirstDay()) {
+            logger.info("执行易湃线索宽表调度任务--日：{}", new Date());
+            excutingRuleService.yipai(FinalVar.DAY);
+        } else {
+            logger.info("执行易湃线索宽表调度任务--日和月：{}", new Date());
+            excutingRuleService.yipai(null);
+        }
+    }
+
+    @Scheduled(cron = "0 0 9 * * ?") // 9点发送报告
+    public void yipai2() throws Exception {
+        if (!DateFormatSafe.isFirstDay()) {
+            logger.info("执行易湃线索宽表调度任务--日：{}", new Date());
+            excutingRuleService.yipai(FinalVar.DAY);
+        } else {
+            logger.info("执行易湃线索宽表调度任务--日和月：{}", new Date());
+            excutingRuleService.yipai(null);
+        }
+    }
 
     // 每日凌晨更新规则下次的执行时间
     @Scheduled(cron = "0 0 0 * * ?")
@@ -162,5 +204,20 @@ public class QuartzTask {
     public void checkRuleExecTime() throws Exception {
         syncRuleExecTimeService.checkRuleExecTime();
     }*/
+
+    /**
+     * 指数项目报告
+     *
+     * @throws Exception
+     */
+    @Scheduled(cron = "0 0 9 * * ?") // 9点发送报告
+    public void noPassReport() throws Exception {
+        excutingRuleService.sendTodayNoPassReport();
+    }
+
+    @Scheduled(cron = "0 0 7 * * ?") // 7点发送报告
+    public void noPassRule() throws Exception {
+        excutingRuleService.sendTodayNoPassReport();
+    }
 }
 

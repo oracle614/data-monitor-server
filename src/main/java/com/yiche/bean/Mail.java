@@ -3,26 +3,38 @@ package com.yiche.bean;
 public class Mail {
 
 
-        //监控ID
-		private String id;
-        //监控内容
-        private String info;
-        //日期
-		private String date;
-        //库表|字段
-        private String table;
-		//监控类型
-		private String type;
-        //正常范围
-        private String scope;
-        //波动范围
-        private String waveScope;
-		//实际值
-		private String value;
-		//对比值
-		private String valueCompare;
-		//影响范围
-		private String project;
+    //监控ID
+    private String id;
+    //监控内容
+    private String info;
+    //日期
+    private String date;
+    //库表|字段
+    private String table;
+    //监控类型
+    private String type;
+    //正常范围
+    private String scope;
+    //波动范围
+    private String waveScope;
+    //实际值
+    private String value;
+    //对比值
+    private String valueCompare;
+    //影响范围
+    private String project;
+    //优先级
+    private String priority;
+    //责任人
+    private String user;
+
+    //维度名
+    private String dimensionName;
+
+    //对比字段
+    private String columnName;
+
+    private String error;
 
     public String getId() {
         return id;
@@ -102,5 +114,46 @@ public class Mail {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPriority() {
+
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getDimensionName() {
+        return dimensionName;
+    }
+
+    public void setDimensionName(String dimensionName) {
+        this.dimensionName = dimensionName;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

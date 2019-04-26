@@ -1,5 +1,7 @@
 package com.yiche.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class ColumnRuleBean {
@@ -35,6 +37,7 @@ public class ColumnRuleBean {
 
     private String reciever;
 
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private String countType;
@@ -58,6 +61,17 @@ public class ColumnRuleBean {
     private Date nextExecTime;
 
     private String alarmUniqueId;
+
+    private String priority;
+    private String exeTime;
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 
     public Integer getCid() {
         return cid;
@@ -281,5 +295,13 @@ public class ColumnRuleBean {
 
     public void setAlarmUniqueId(String alarmUniqueId) {
         this.alarmUniqueId = alarmUniqueId;
+    }
+
+    public String getExeTime() {
+        return exeTime;
+    }
+
+    public void setExeTime(String exeTime) {
+        this.exeTime = exeTime;
     }
 }

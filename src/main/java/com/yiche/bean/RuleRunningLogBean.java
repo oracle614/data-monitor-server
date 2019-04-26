@@ -37,6 +37,14 @@ public class RuleRunningLogBean {
 
     private String partitionType;
 
+    private String error;
+
+    private String priority;
+
+    private String number;
+
+    private Integer checkday;
+
     public Integer getId() {
         return id;
     }
@@ -171,5 +179,38 @@ public class RuleRunningLogBean {
 
     public void setPartitionType(String partitionType) {
         this.partitionType = partitionType;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+
+    public Integer getCheckday() {
+        return checkday;
+    }
+
+    public void setCheckday(Integer checkday) {
+        this.checkday = checkday;
     }
 }

@@ -21,9 +21,9 @@ public class test {
 //        System.out.println(   c.compareTo(a));
 //        System.out.println(   c.compareTo(c));
 
-        ExcutingRuleService excutingRuleService = new ExcutingRuleServiceImpl();
-        boolean flag=excutingRuleService.isPartitionReady("pt=2018-06-09",1,"日");
-        System.out.print(flag);
+//        ExcutingRuleService excutingRuleService = new ExcutingRuleServiceImpl();
+//        boolean flag=excutingRuleService.isPartitionReady("pt=2018-06-09",1,"日");
+//        System.out.print(flag);
     }
 }
 

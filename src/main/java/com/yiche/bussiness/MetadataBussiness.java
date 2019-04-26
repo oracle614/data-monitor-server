@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "aurora-metadata")
 public interface MetadataBussiness {
 
-    @RequestMapping(value = "/hi",method = RequestMethod.GET)
+    @RequestMapping(value = "/hi", method = RequestMethod.GET)
     String getMetaDataBaseInfo(@RequestParam("name") String str);
 
-    @RequestMapping(value ="/dblist",method = RequestMethod.GET)
+    @RequestMapping(value = "/dblist", method = RequestMethod.GET)
     String getDBList(@RequestParam("name") String name);
 }

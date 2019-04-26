@@ -3,7 +3,6 @@ package com.yiche.service;
 import com.yiche.bean.RuleRunningLogBean;
 import com.yiche.bean.TableRuleBean;
 
-import java.sql.Statement;
 import java.util.List;
 import java.util.Vector;
 

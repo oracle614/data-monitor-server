@@ -13,7 +13,10 @@ import java.util.List;
 public interface SyncRuleExecTimeService {
 
     List<JobOozieLineageEntity> getLineageByHdbAndHtable(String databaseName, String tableName) throws IOException;
+
     Date getRuleExecTime(String databaseName, String tableName);
+
     void updateRuleExecTime();
+
     void checkRuleExecTime();
 }

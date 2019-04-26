@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.DimensionResultBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.DimensionResultBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="table_id" property="tableId" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="value_compare" property="valueCompare" jdbcType="VARCHAR" />
+    <result column="dimension" property="dimension" jdbcType="VARCHAR" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="percent" property="percent" jdbcType="VARCHAR" />
+    <result column="error" property="error" jdbcType="VARCHAR" />
+    <result column="wave" property="wave" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dimension_result_tb
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.DimensionResultBean" >
+    insert into dimension_result_tb ( table_id, value,
+      value_compare, dimension, column_name, 
+      percent, error,wave
+      )
+    values (#{tableId,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR},
+      #{valueCompare,jdbcType=VARCHAR}, #{dimension,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{percent,jdbcType=VARCHAR}, #{error,jdbcType=VARCHAR},#{wave,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.DimensionResultBean" >
+    update dimension_result_tb
+    set table_id = #{tableId,jdbcType=VARCHAR},
+      value = #{value,jdbcType=VARCHAR},
+      value_compare = #{valueCompare,jdbcType=VARCHAR},
+      dimension = #{dimension,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      percent = #{percent,jdbcType=VARCHAR},
+      error = #{error,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, table_id, value, value_compare, dimension, column_name, percent, error, 
+    create_time
+    from dimension_result_tb
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, table_id, value, value_compare, dimension, column_name, percent, error, 
+    create_time
+    from dimension_result_tb
+  </select>
+
+  <select id="queryTodayResultByTableId" resultMap="BaseResultMap">
+    select * from dimension_result_tb where
+    table_id=#{tableId,jdbcType=VARCHAR}
+    and  date(create_time) = date_sub(curdate(), INTERVAL 0 DAY)
+  </select>
+
+</mapper>

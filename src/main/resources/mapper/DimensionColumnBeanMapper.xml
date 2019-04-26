@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.DimensionColumnBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.yiche.bean.DimensionColumnBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="table_id" property="tableId" jdbcType="VARCHAR" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dimension_column_tb
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yiche.bean.DimensionColumnBean" >
+    insert into dimension_column_tb (table_id, column_name
+      )
+    values ( #{tableId,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yiche.bean.DimensionColumnBean" >
+    update dimension_column_tb
+    set table_id = #{tableId,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, table_id, column_name
+    from dimension_column_tb
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, table_id, column_name
+    from dimension_column_tb
+  </select>
+
+  <select id="getColumnById" resultType="String" >
+    select  column_name
+    from dimension_column_tb
+    where table_id=#{tableId,jdbcType=VARCHAR}
+  </select>
+</mapper>

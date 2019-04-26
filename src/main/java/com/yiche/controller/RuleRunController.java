@@ -1,7 +1,9 @@
 package com.yiche.controller;
 
 
-import com.yiche.bean.*;
+import com.yiche.bean.ColumnRuleBean;
+import com.yiche.bean.RuleRunningLogBean;
+import com.yiche.bean.TableRuleBean;
 import com.yiche.bussiness.MetadataBussiness;
 import com.yiche.bussiness.PlatformBussiness;
 import com.yiche.dao.DayDataBeanMapper;
@@ -11,6 +13,7 @@ import com.yiche.quartz.QuartzTask;
 import com.yiche.service.*;
 import com.yiche.utils.DateFormatSafe;
 import com.yiche.utils.FinalVar;
+import com.yiche.utils.NoticeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class RuleRunController {
@@ -29,7 +35,7 @@ public class RuleRunController {
 
 
     @Autowired
-    RuleRunService  ruleRunService;
+    RuleRunService ruleRunService;
     @Autowired
     ExcutingRuleService excutingRuleService;
 
@@ -65,61 +71,97 @@ public class RuleRunController {
     @Autowired
     ItemModuleListBeanMapper itemModuleListBeanMapper;
     @Value("${hive.driverName}")
-    private  String driverName  ;
+    private String driverName;
     @Value("${hive.url}")
-    private  String url ;
+    private String url;
     @Value("${hive.user}")
-    private  String user ;
+    private String user;
     @Value("${hive.password}")
-    private  String password;
+    private String password;
 
+    @RequestMapping("/testNotifyConnection")
+    @ResponseBody
+    public String testNotifyConnection() {
+        String alarmUniqueId = "dd336xvp";
+        NoticeBuilder noticeBuilder = NoticeBuilder.createNoticeSend();
+        noticeBuilder.setGroupUniqueId(alarmUniqueId);
+        noticeBuilder.setEmailSubject("数诊通知连接测试");
+
+        try {
+            noticeBuilder.sendNotice();
+        } catch (Exception e) {
+            logger.info("testNotifyConnection notify failed", e);
+        }
+        return "testNotifyConnection";
+    }
 
     @RequestMapping("/item")
     @ResponseBody
-    public String item (){
-        if(!DateFormatSafe.isFirstDay()) {
+    public String item() {
+        if (!DateFormatSafe.isFirstDay()) {
             logger.info("执行指数项目调度任务-日：{}", new Date());
             excutingRuleService.runIndexPro(FinalVar.DAY);
-        }else {
+        } else {
             logger.info("执行指数项目调度任务-日和月：{}", new Date());
             excutingRuleService.runIndexPro(null);
         }
-        return  "wasdwa";
+        return "item";
     }
 
-    @RequestMapping("/platform")
+    @RequestMapping("/platformIndex")
     @ResponseBody
-    public String dataWarehourse (){
+    public String platformIndex() {
         try {
             quartzTask.platformIndex();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  "wasdwa";
+        return "platformIndex";
     }
 
     @RequestMapping("/distributor")
     @ResponseBody
-    public String distributor (){
+    public String distributor() {
         try {
             quartzTask.distributorDataCenter();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  "wasdwaa";
+        return "distributor";
     }
 
 
-
-    @RequestMapping("/datehourse")
+    @RequestMapping("/globalReport")
     @ResponseBody
-    public String datehourse (){
+    public String globalReport() {
+        try {
+            quartzTask.globalReport();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "globalReport";
+    }
+
+    @RequestMapping("/yipaiReport")
+    @ResponseBody
+    public String yipaiReport() {
+        try {
+            quartzTask.yipai();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "yipaiReport";
+    }
+
+    @RequestMapping("/dataHouse")
+    @ResponseBody
+    public String dataHouse() {
         try {
             quartzTask.dataWarehourseRule();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  "wasdwa";
+        return "dataHouse";
     }
 
     @RequestMapping("/run")
@@ -154,69 +196,75 @@ public class RuleRunController {
         syncRuleExecTimeService.updateRuleExecTime();
     }
 
-    @RequestMapping("/notify")
-    @ResponseBody
-    public String warnning(){
-
-        String Alarm_uniqueid="22fwm8nj";
-        excutingRuleService.warnning(Alarm_uniqueid,"dateBase"
-                , "tableName", "content", "column", "error", "value"
-                , "valueCompare", "scope","id","project","waveScope",1,"日");
-//        excutingRuleService.sqlWarnning(reciever,"asd","asd","asdasd");
-        return  "asd";
-    }
-
     @RequestMapping("/resultLog")
     @ResponseBody
-    public ResponseEntity<Map> getResultLog(@RequestParam("index") String index, @RequestParam("limit") String limit){
-        List<RuleRunningLogBean>  list= tableRuleService.getResultLogByPage(index,limit);
-        Integer count =excutingRuleService.getResultLogAllCount();
-        Map<String,Object>  resultMap= new HashMap<>();
-        resultMap.put("count",count);
-        resultMap.put("list",list);
-        resultMap.put("count",count);
-        resultMap.put("list",list);
-        ResponseEntity<Map> result=new ResponseEntity<Map>(resultMap, HttpStatus.OK);
-        return  result;
+    public ResponseEntity<Map> getResultLog(@RequestParam("index") String index, @RequestParam("limit") String limit) {
+        List<RuleRunningLogBean> list = tableRuleService.getResultLogByPage(index, limit);
+        Integer count = excutingRuleService.getResultLogAllCount();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("count", count);
+        resultMap.put("list", list);
+        ResponseEntity<Map> result = new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        return result;
     }
 
-     @RequestMapping(value="/resultLog/byTable")
-     @ResponseBody
+    @RequestMapping(value = "/resultLog/passCount")
+    @ResponseBody
+    public ResponseEntity<Map> getResultLogCountByStatus(@RequestParam("dataBase") String dataBase
+            , @RequestParam("tableName") String tableName) {
+        int passCount = excutingRuleService.getResultLogStatusCount(dataBase, tableName, "通过");
+        int notPassCount = excutingRuleService.getResultLogStatusCount(dataBase, tableName, "不通过");
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("pass", passCount);
+        resultMap.put("notPass", notPassCount);
+        ResponseEntity<Map> result = new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        return result;
+    }
+
+    @RequestMapping(value = "/resultLog/byTable")
+    @ResponseBody
     public ResponseEntity<Map> getResultLogByTable(@RequestParam("dataBase") String dataBase
-             , @RequestParam("tableName") String tableName,@RequestParam("index") String index,@RequestParam("limit") String limit){
-        List<RuleRunningLogBean>  list= excutingRuleService.getDataByDataBaseAndTable(dataBase,tableName
-                ,Integer.valueOf(index),Integer.valueOf(limit));
-        int count= excutingRuleService.getResultLogCount(dataBase,tableName);
-        Map<String,Object>  resultMap= new HashMap<>();
-         resultMap.put("count",count);
-         resultMap.put("list",list);
-        ResponseEntity<Map> result=new ResponseEntity<Map>(resultMap, HttpStatus.OK);
-        return  result;
+            , @RequestParam("tableName") String tableName, @RequestParam("index") String index, @RequestParam("limit") String limit) {
+        List<RuleRunningLogBean> list = excutingRuleService.getDataByDataBaseAndTable(dataBase, tableName
+                , Integer.valueOf(index), Integer.valueOf(limit));
+        int count = excutingRuleService.getResultLogCount(dataBase, tableName);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("count", count);
+        resultMap.put("list", list);
+        ResponseEntity<Map> result = new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        return result;
     }
 
-    @RequestMapping(value="/run/table")
+    @RequestMapping(value = "/run/table")
     @ResponseBody
-    public ResponseEntity<Map> tableRuleRun(@RequestBody TableRuleBean tableRuleBean ){
-        System.out.println("+++___++++"+tableRuleBean.getDatabaseName());
-        System.out.println("+++___++++"+tableRuleBean.getCreateTime());
-
-          String message=tableRuleService.tableRuleRun(tableRuleBean);
-//        String message = "ssdd";
-        Map<String,Object>  resultMap= new HashMap<>();
-        resultMap.put("status","success");
-        resultMap.put("message",message);
-        ResponseEntity<Map> result=new ResponseEntity<Map>(resultMap, HttpStatus.OK);
-        return  result;
+    public ResponseEntity<Map> tableRuleRun(@RequestBody TableRuleBean tableRuleBean) {
+        String message = tableRuleService.tableRuleRun(tableRuleBean);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("status", "success");
+        resultMap.put("message", message);
+        ResponseEntity<Map> result = new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        return result;
     }
 
-    @RequestMapping(value="/run/column")
+    @RequestMapping(value = "/run/column")
     @ResponseBody
-    public ResponseEntity<Map> columnRuleRun(@RequestBody ColumnRuleBean columnRuleBean ){
-        String message=columnRuleService.columnRuleRun(columnRuleBean);
-        Map<String,Object>  resultMap= new HashMap<>();
-        resultMap.put("status","success");
-        resultMap.put("message",message);
-        ResponseEntity<Map> result=new ResponseEntity<Map>(resultMap, HttpStatus.OK);
-        return  result;
+    public ResponseEntity<Map> columnRuleRun(@RequestBody ColumnRuleBean columnRuleBean) {
+        String message = columnRuleService.columnRuleRun(columnRuleBean);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("status", "success");
+        resultMap.put("message", message);
+        ResponseEntity<Map> result = new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        return result;
+    }
+
+
+    @RequestMapping(value = "/run/nopassrule")
+    @ResponseBody
+    public ResponseEntity<Map> nopassrule() {
+        excutingRuleService.sendTodayNoPassReport();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("status", "success");
+        ResponseEntity<Map> result = new ResponseEntity<Map>(resultMap, HttpStatus.OK);
+        return result;
     }
 }

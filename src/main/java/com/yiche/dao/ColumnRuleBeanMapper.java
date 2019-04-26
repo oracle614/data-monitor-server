@@ -42,4 +42,7 @@ public interface ColumnRuleBeanMapper {
     List<ColumnRuleBean> queryAll();
 
     void updateExecTime(@Param("nextExecTime") Date nextExecTime, @Param("cid") Long cid);
+
+    String getColumnRuleById(@Param("id") String id);
+
 }

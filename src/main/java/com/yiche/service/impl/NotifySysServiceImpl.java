@@ -37,14 +37,12 @@ public class NotifySysServiceImpl implements NotifySysService {
 
     //数据报告
     @Override
-    public void notifyBuilder(String alarmUniqueId, List<IndexProMail> mailList) {
+    public void notifyBuilder(String project, String alarmUniqueId, List<IndexProMail> mailList) {
 
+        String emailSubject = "项目报告-" + project;
         NoticeBuilder noticeBuilder = NoticeBuilder.createNoticeSend();
         noticeBuilder.setGroupUniqueId(alarmUniqueId);
-//        noticeBuilder.setWxToList("15342");
-//        noticeBuilder.setEmailToList("zhaoguanchen@yiche.com");
-
-        noticeBuilder.setEmailSubject("项目报告");
+        noticeBuilder.setEmailSubject(emailSubject);
         Map<String, Object> mapDate = new HashMap<String, Object>();
         mapDate.put("mails", mailList);
         ObjectMapper mapper = new ObjectMapper();
@@ -52,23 +50,19 @@ public class NotifySysServiceImpl implements NotifySysService {
 
         try {
             content = mapper.writeValueAsString(mapDate);
-            System.out.println(content);
             noticeBuilder.setDataContent(content);
             noticeBuilder.sendNotice();
         } catch (Exception e) {
             logger.info("notify failed", e);
         }
-
-
     }
-
 
 
     //warning
     @Override
     public void notifyBuilder(String alarmUniqueId, String dateBase
             , String tableName, String content, String column, String error, String value
-            , String valueCompare, String scope, String id, String project, String waveScope, Integer checkDay, String partitionType) {
+            , String valueCompare, String scope, String id, String project, String waveScope, Integer checkDay, String partitionType, String user, String priority) {
 
 
         Map<String, Object> mapDate = new HashMap<String, Object>();
@@ -88,35 +82,27 @@ public class NotifySysServiceImpl implements NotifySysService {
         mail.setScope(scope);
         mail.setProject(project);
         mail.setWaveScope(waveScope);
+        mail.setPriority(priority);
+        mail.setUser(user);
         mailList.add(mail);
 
         mapDate.put("mails", mailList);
 
         NoticeBuilder noticeBuilder = NoticeBuilder.createNoticeSend();
         noticeBuilder.setGroupUniqueId(alarmUniqueId);
-        noticeBuilder.setEmailSubject("规则告警");
+        noticeBuilder.setEmailSubject("规则告警-" + error);
 
         ObjectMapper mapper = new ObjectMapper();
-        String datacontent = null;
+        String dataContent = null;
 
         try {
-            datacontent = mapper.writeValueAsString(mapDate);
-            System.out.println(datacontent);
-            noticeBuilder.setDataContent(datacontent);
+            dataContent = mapper.writeValueAsString(mapDate);
+            noticeBuilder.setDataContent(dataContent);
             noticeBuilder.sendNotice();
         } catch (Exception e) {
             logger.info("notify failed", e);
         }
 
-//        try {
-//            json = mapper.writeValueAsString(vo);
-//            logger.info("json:{} " + json);
-//            MailJsonDataEntity entity = mapper.readValue(json, MailJsonDataEntity.class);
-//            logger.info(entity.toString());
-//            String result = httpPostWithJSON(remoteUrl, json);
-//        } catch (Exception e) {
-//            logger.info("报警失败", e);
-//        }
     }
 
 
@@ -127,12 +113,7 @@ public class NotifySysServiceImpl implements NotifySysService {
 
         NoticeBuilder noticeBuilder = NoticeBuilder.createNoticeSend();
         noticeBuilder.setGroupUniqueId(alarmUniqueId);
-//        noticeBuilder.setWxToList("15342");
-//        noticeBuilder.setEmailToList("zhaoguanchen@yiche.com");
-
         noticeBuilder.setEmailSubject("项目报告");
-
-
         Map<String, Object> mapDate = new HashMap<String, Object>();
         List<SqlMail> mailList = new ArrayList<>();
         SqlMail mail = new SqlMail();
@@ -148,7 +129,6 @@ public class NotifySysServiceImpl implements NotifySysService {
 
         try {
             datacontent = mapper.writeValueAsString(mapDate);
-            System.out.println(datacontent);
             noticeBuilder.setDataContent(datacontent);
             noticeBuilder.sendNotice();
         } catch (Exception e) {
@@ -157,50 +137,32 @@ public class NotifySysServiceImpl implements NotifySysService {
 
 
     }
+
     @Override
-    public void notifyBuilder(String alarmUniqueId, String subject, String content){
+    public void notifyBuilder(String alarmUniqueId, String subject, String content) {
         NoticeBuilder noticeBuilder = NoticeBuilder.createNoticeSend();
         noticeBuilder.setGroupUniqueId(alarmUniqueId);
-
-
         noticeBuilder.setEmailSubject("规则执行失败告警");
 
         Map<String, Object> mapDate = new HashMap<String, Object>();
-        mapDate.put("subject",subject);
-        mapDate.put("content",content);
+        mapDate.put("subject", subject);
+        mapDate.put("content", content);
 
         ObjectMapper mapper = new ObjectMapper();
         String datacontent = null;
 
         try {
             datacontent = mapper.writeValueAsString(mapDate);
-            System.out.println(datacontent);
             noticeBuilder.setDataContent(datacontent);
             noticeBuilder.sendNotice();
         } catch (Exception e) {
             logger.info("notify failed", e);
         }
-
-
-
-
-
     }
 
- /*   ///////////////////////////分割线///////////////////////////////////////
-
-    //warning
     @Override
-    public void notifyWechat(String from, List<String> to, String groupId, String weixinReceiver, String dateBase
-            , String tableName, String content, String column, String error, String value
-            , String valueCompare, String scope, String id, String project, String waveScope, Integer checkDay, String partitionType) {
-        MailJsonDataEntity vo = new MailJsonDataEntity();
-        vo.setFrom(from);
-        vo.setPrimaryTo(to);
-        vo.setSubject(dateBase + "." + tableName + FinalVar.WARNING);
-        vo.setGroupId(groupId);
-        vo.setWeixinReceiver(weixinReceiver);
-
+    public void notifyBuilder(String alarmUniqueId, String dateBase, String tableName, String content, String column, String error,
+                              String id, String project, Integer checkDay, String partitionType, String user, String priority, String errorMsg) {
         Map<String, Object> mapDate = new HashMap<String, Object>();
         List<Mail> mailList = new ArrayList<Mail>();
         Mail mail = new Mail();
@@ -209,93 +171,34 @@ public class NotifySysServiceImpl implements NotifySysService {
         mail.setId(id);
         mail.setTable(dateBase + "." + tableName + "| " + column);
         mail.setType(error);
-        // FinalVar.MONTH.equals(partitionType)? DateFormatSafe.getMonth(checkDay):DateFormatSafe.getDay(checkDay)
 
         mail.setDate(FinalVar.MONTH.equals(partitionType) ?
                 DateFormatSafe.formatMonth(DateFormatSafe.getMonth(checkDay)) :
                 DateFormatSafe.formatSign(DateFormatSafe.getDay(checkDay)));
-        mail.setValue(value);
-        mail.setValueCompare(valueCompare);
-        mail.setScope(scope);
         mail.setProject(project);
-        mail.setWaveScope(waveScope);
+        mail.setPriority(priority);
+        mail.setUser(user);
+        mail.setError(errorMsg);
         mailList.add(mail);
 
         mapDate.put("mails", mailList);
-        vo.setData(mapDate);
+
+        NoticeBuilder noticeBuilder = NoticeBuilder.createNoticeSend();
+        noticeBuilder.setGroupUniqueId(alarmUniqueId);
+        noticeBuilder.setEmailSubject("规则告警-" + error);
+
         ObjectMapper mapper = new ObjectMapper();
-        String json = null;
+        String dataContent = null;
+
         try {
-            json = mapper.writeValueAsString(vo);
-            logger.info("json:{} " + json);
-            MailJsonDataEntity entity = mapper.readValue(json, MailJsonDataEntity.class);
-            logger.info(entity.toString());
-            String result = httpPostWithJSON(remoteUrl, json);
+            dataContent = mapper.writeValueAsString(mapDate);
+            noticeBuilder.setDataContent(dataContent);
+            noticeBuilder.sendNotice();
         } catch (Exception e) {
-            logger.info("报警失败", e);
+            logger.info("notify failed", e);
         }
     }
 
-    //sql
-    @Override
-    public void notifyWechat(String from, List<String> to, String groupId, String weixinReceiver, String dateBase
-            , String tableName, String content) {
-        MailJsonDataEntity vo = new MailJsonDataEntity();
-        vo.setFrom(from);
-        vo.setPrimaryTo(to);
-        vo.setSubject(dateBase + "." + tableName + FinalVar.SQL);
-        vo.setGroupId(groupId);
-        vo.setWeixinReceiver(weixinReceiver);
-
-        Map<String, Object> mapDate = new HashMap<String, Object>();
-        List<SqlMail> mailList = new ArrayList<>();
-        SqlMail mail = new SqlMail();
-
-        mail.setResult(content);
-        mailList.add(mail);
-
-        mapDate.put("mails", mailList);
-        vo.setData(mapDate);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = null;
-        try {
-            json = mapper.writeValueAsString(vo);
-            logger.info("json:{} " + json);
-            MailJsonDataEntity entity = mapper.readValue(json, MailJsonDataEntity.class);
-            logger.info(entity.toString());
-            String result = httpPostWithJSON(remoteUrl, json);
-        } catch (Exception e) {
-            logger.info("报警失败", e);
-        }
-    }
-
-    //数据报告
-    @Override
-    public void notifyWechat(String from, List<String> to, String groupId, String weixinReceiver, List<IndexProMail> mailList) {
-        MailJsonDataEntity vo = new MailJsonDataEntity();
-        vo.setFrom(from);
-        vo.setPrimaryTo(to);
-        vo.setSubject("项目报告");
-        vo.setGroupId(groupId);
-        vo.setWeixinReceiver(weixinReceiver);
-
-        Map<String, Object> mapDate = new HashMap<String, Object>();
-        mapDate.put("mails", mailList);
-        vo.setData(mapDate);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = null;
-        try {
-            json = mapper.writeValueAsString(vo);
-            logger.info("json: " + json);
-            MailJsonDataEntity entity = mapper.readValue(json, MailJsonDataEntity.class);
-            logger.info(entity.toString());
-            String result = httpPostWithJSON(remoteUrl, json);
-        } catch (Exception e) {
-            logger.info("报警失败", e);
-        }
-    }
-
-*/
     public String httpPostWithJSON(String url, String json)
             throws Exception {
 

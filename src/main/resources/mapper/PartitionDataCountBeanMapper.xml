@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yiche.dao.PartitionDataCountBeanMapper">
+    <resultMap id="BaseResultMap" type="com.yiche.bean.PartitionDataCountBean">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="database_name" property="databaseName" jdbcType="VARCHAR"/>
+        <result column="table_name" property="tableName" jdbcType="VARCHAR"/>
+        <result column="data_count" property="dataCount" jdbcType="BIGINT"/>
+        <result column="partition" property="partition" jdbcType="VARCHAR"/>
+        <result column="is_weekend" property="isWeekend" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.yiche.bean.PartitionDataCountBean">
+    insert into table_data_count (id, database_name, table_name, data_count, `partition`,is_weekend)
+    values (#{id,jdbcType=INTEGER}, #{databaseName,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, 
+      #{dataCount,jdbcType=BIGINT}, #{partition,jdbcType=VARCHAR}, #{isWeekend,jdbcType=VARCHAR})
+  </insert>
+
+    <select id="getHistoryCount" resultMap="BaseResultMap">
+    select *
+    from table_data_count
+    where
+    database_name = #{databaseName,jdbcType=VARCHAR}
+    AND table_name =#{tableName,jdbcType=VARCHAR}
+    order by `partition` desc LIMIT 30
+  </select>
+
+
+    <select id="getHistoryCountByIsWeekend" resultMap="BaseResultMap">
+    select *
+    from table_data_count
+    where
+    database_name = #{databaseName,jdbcType=VARCHAR}
+    AND table_name =#{tableName,jdbcType=VARCHAR}
+    and isWeekend =#{isWeekend,jdbcType=VARCHAR}
+  </select>
+    <select id="getHistoryCountByPartition" resultMap="BaseResultMap">
+    select *
+    from table_data_count
+    where
+    database_name = #{databaseName,jdbcType=VARCHAR}
+    AND table_name =#{tableName,jdbcType=VARCHAR}
+    and `partition` =#{partition,jdbcType=VARCHAR}
+  </select>
+    <select id="deleteById" resultMap="BaseResultMap">
+    DELETE
+    FROM table_data_count
+    where
+    id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+</mapper>

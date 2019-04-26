@@ -4,6 +4,7 @@ package com.yiche.utils;
  * Created by weiyongxu on 2018/7/18.
  */
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -118,5 +119,18 @@ public class DateUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 判断是否是周末
+     * @param date
+     * @return
+     */
+    public static boolean isWeekend(String date) throws ParseException{
+        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date bdate = format1.parse(date);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(bdate);
+        return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
     }
 }

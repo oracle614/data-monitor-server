@@ -27,4 +27,6 @@ public interface RuleService {
      */
     Integer compareResult(TableRuleBean item, Map<String,String> dataMap, Statement stmt
             , String partitions, int dayNum);
+
+
 }

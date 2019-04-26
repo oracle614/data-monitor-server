@@ -19,6 +19,10 @@
     <result column="project" property="project" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="partition_type" property="partitionType" jdbcType="VARCHAR" />
+    <result column="priority" property="priority" jdbcType="VARCHAR" />
+    <result column="error" property="error" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="checkday" property="checkday"/>
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from rule_running_log_db
@@ -26,17 +30,18 @@
   </delete>
   <insert id="insert" parameterType="com.yiche.bean.RuleRunningLogBean" >
     insert into rule_running_log_db (id, level_type, type, 
-      leader, scope, value, 
+      leader, scope, value,
       status, create_time, table_name, 
       database_name, column_name, is_warnning, 
       value_compare, rule_id, project, 
-      content, partition_type)
+      content, partition_type,error,priority,number,checkday)
     values (#{id,jdbcType=INTEGER}, #{levelType,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
       #{leader,jdbcType=VARCHAR}, #{scope,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{tableName,jdbcType=VARCHAR}, 
       #{databaseName,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, #{isWarnning,jdbcType=VARCHAR}, 
       #{valueCompare,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, #{project,jdbcType=VARCHAR}, 
-      #{content,jdbcType=VARCHAR}, #{partitionType,jdbcType=VARCHAR})
+      #{content,jdbcType=VARCHAR}, #{partitionType,jdbcType=VARCHAR}, #{error,jdbcType=VARCHAR},
+      #{priority,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{checkday,jdbcType=INTEGER})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.yiche.bean.RuleRunningLogBean" >
     update rule_running_log_db
@@ -76,9 +81,24 @@
 
   <select id="getResultLogByPage" resultMap="BaseResultMap" >
     select *
+    from rule_running_log_db a,
+    (select id
     from rule_running_log_db
     group by database_name,table_name
-    limit   #{index,jdbcType=INTEGER}, #{limit,jdbcType=INTEGER}
+    ) b
+    where a.id = b.id
+    limit  #{index,jdbcType=INTEGER}, #{limit,jdbcType=INTEGER}
+  </select>
+
+  <select id="getResultLogStatusCount" resultType="int" >
+    select count(*)
+    from rule_running_log_db
+    where
+    database_name=#{databaseName,jdbcType=VARCHAR}
+    AND
+    table_name=#{tableName,jdbcType=VARCHAR}
+    AND
+    status = #{status,jdbcType=VARCHAR}
   </select>
 
   <select id="getResultLogAllCount" resultType="int" >
@@ -304,5 +324,37 @@
     date(create_time) = date_sub(curdate(), INTERVAL  #{day,jdbcType=INTEGER} DAY)
   </update>
 
+  <select id="queryTodayNoPassRule" resultMap="BaseResultMap">
+    select * from rule_running_log_db where status='不通过'
+    and  date(create_time) = date_sub(curdate(), INTERVAL 0 DAY)
+  </select>
 
+  <select id="queryTodayResultByTableName" resultMap="BaseResultMap">
+    select * from rule_running_log_db where
+    database_name= #{databaseName,jdbcType=VARCHAR}
+    and table_name= #{tableName,jdbcType=VARCHAR}
+    and status='不通过'
+    and  date(create_time) = date_sub(curdate(), INTERVAL 0 DAY)
+  </select>
+  <select id="getTimeRuleNotReady" resultMap="BaseResultMap" >
+    SELECT
+    *
+    FROM
+    rule_running_log_db c
+    INNER JOIN (
+    SELECT
+    DISTINCT b.tableid
+    FROM
+    item_module_list a
+    INNER JOIN item_table_relation b ON a.id = b.itemid
+    WHERE
+    a.parentid =  #{parentId,jdbcType=VARCHAR}
+    OR a.id =  #{id,jdbcType=VARCHAR}
+    ) d ON c.rule_id = d.tableid
+    AND date(create_time) = date_sub(curdate(), INTERVAL #{day,jdbcType=INTEGER} DAY)
+    where  c.type='完成时间' and c.value=#{value,jdbcType=VARCHAR}
+    <if test="partitionType != null and partitionType != ''">
+      and c.partition_type= #{partitionType,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>
